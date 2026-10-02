@@ -256,6 +256,11 @@ section{position:relative}
 .c-orange{background:radial-gradient(120% 70% at 50% 100%,rgba(255,159,10,.32),transparent 60%),#101014}.c-orange .lbl{color:#ffb340}
 .c-pink{background:radial-gradient(120% 70% at 50% 100%,rgba(255,55,95,.3),transparent 60%),#101014}.c-pink .lbl{color:#ff6482}
 .c-teal{background:radial-gradient(120% 70% at 50% 100%,rgba(100,210,255,.3),transparent 60%),#101014}.c-teal .lbl{color:#64d2ff}
+.c-aws{background:radial-gradient(120% 70% at 50% 100%,rgba(255,153,0,.34),transparent 60%),#101014;box-shadow:inset 0 0 0 1px rgba(255,153,0,.28)}
+.wip-badge{display:inline-flex;align-items:center;gap:8px;color:#ffb340;font-size:13px;font-weight:600;padding:5px 12px 5px 10px;border-radius:999px;background:rgba(255,153,0,.12);border:1px solid rgba(255,153,0,.3)}
+.wip-badge .dot{background:#ff9900;animation-name:pulseO}
+.aws-mark{display:flex;flex-direction:column;align-items:center;font-size:84px;font-weight:700;letter-spacing:-.04em;line-height:.9;color:#fff}
+.aws-mark svg{width:120px;height:22px;margin-top:2px}
 .glyph{font-size:96px;font-weight:800;letter-spacing:-.06em;line-height:1;background:linear-gradient(180deg,#fff,rgba(255,255,255,.25));-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--mono)}
 .paddles{display:flex;gap:14px;justify-content:flex-end}
 .paddle{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;color:#e8e8ed;transition:background .2s,opacity .2s}
@@ -651,6 +656,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     </div>
   </div>
   <div class="track" id="track">
+    <article class="card c-aws"><div class="lbl"><span class="wip-badge"><span class="dot"></span>Currently preparing</span></div><h3>AWS Certified Cloud Practitioner.</h3><div class="art"><span class="aws-mark">aws<svg viewBox="0 0 120 22" aria-hidden="true"><path d="M4 6c30 16 80 16 108 2" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round"/><path d="M102 4l12 3-6 10" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="chips"><span class="chip">Cloud Concepts</span><span class="chip">Security &amp; Compliance</span><span class="chip">Core Services</span><span class="chip">Billing &amp; Pricing</span></div></article>
     <article class="card c-blue"><div class="lbl">Programming</div><h3>Fluent in the languages that run the world.</h3><div class="art"><span class="glyph">{ }</span></div><div class="chips"><span class="chip">Java</span><span class="chip">Python</span><span class="chip">C</span><span class="chip">SQL</span><span class="chip">JavaScript</span></div></article>
     <article class="card c-purple"><div class="lbl">CS Fundamentals</div><h3>The foundations, done properly.</h3><div class="art"><span class="glyph">O(n)</span></div><div class="chips"><span class="chip">Data Structures</span><span class="chip">Algorithms</span><span class="chip">OOP</span><span class="chip">DBMS</span><span class="chip">Operating Systems</span></div></article>
     <article class="card c-green"><div class="lbl">Software Development</div><h3>APIs and back ends that hold together.</h3><div class="art"><span class="glyph">/api</span></div><div class="chips"><span class="chip">REST APIs</span><span class="chip">Spring Boot</span><span class="chip">Spring JPA</span><span class="chip">JDBC</span><span class="chip">Git</span></div></article>
