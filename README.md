@@ -1,78 +1,51 @@
-# Pranshu Thakkar Portfolio
+# Pranshu Thakkar — Portfolio
 
-A terminal-inspired developer portfolio built with Java + Spring Boot, with a static GitHub Pages version for public hosting.
+An Apple-inspired, single-page developer portfolio.
 
-## Live Site
+**Live:** https://pranshu1606.github.io
 
-- https://pranshu1606.github.io/
+![Preview](og-image.png)
 
 ## Highlights
 
-- Terminal-style UI with boot screen interaction
-- Multi-section portfolio (Home, Projects, Tech Stack, Resume, Contact)
-- Command-style prompt experience (`help`, `about`, `projects`, `skills`, `contact`, `date`, `clear`)
-- Dedicated static deployment folder for GitHub Pages
+- **Cinematic hero** — gradient headline that eases away on scroll, and a macOS-style terminal window that tilts into place and types out an intro
+- **Scroll-read statement** — a paragraph that lights up word by word as you scroll
+- **Bento "At a glance" tiles** — animated counters with a cursor-following spotlight
+- **Featured projects** — Distributed Order Processing (in progress) with a live architecture diagram and request trace, and KineticAI with an animated query dashboard
+- **"Get the highlights" carousel** — skill cards with paddle navigation, including current AWS Cloud Practitioner prep
+- **Tech Specs** — a light, Apple spec-sheet section with Core / Education / Certifications tabs
+- **macOS Dock** — contact links with hover magnification
+- **Spotlight search** — press `⌘K` / `Ctrl K` or `/` to jump to any section or link
+- Responsive down to phone width, and respects `prefers-reduced-motion`
 
-## Tech Stack
+## Tech
 
-- Java 17
-- Spring Boot 3.3.5
-- Gradle
-- HTML, CSS, JavaScript
+Plain HTML, CSS and JavaScript in a single `index.html` — no framework, no build step, no dependencies beyond Google Fonts (Inter, JetBrains Mono). On Apple devices the system SF Pro font is used.
 
-## Project Structure
+## Files
 
 ```text
-src/main/resources/static/   -> Spring Boot-served frontend assets
-src/main/java/               -> Spring Boot backend entrypoint
-github-pages/                -> Standalone static site (separate Git repo)
+index.html                  the whole site (markup, styles, scripts)
+PranshuThakkar_CSE_GS.pdf   résumé linked from the site
+og-image.png                1200×630 link-preview image (Open Graph / Twitter)
 ```
 
-## Run Locally (Spring Boot)
+## Run locally
 
-### Windows (PowerShell)
-
-```powershell
-./gradlew.bat bootRun
-```
-
-### macOS/Linux
+Open `index.html` directly in a browser, or serve the folder:
 
 ```bash
-./gradlew bootRun
+python -m http.server 8000
+# then visit http://localhost:8000
 ```
 
-Then open:
+## Deploy
 
-- http://localhost:8080
+GitHub Pages serves the `main` branch root of this repository. Commit and push to `main` and the site updates in about a minute.
 
-## Build JAR
+## Contact
 
-```powershell
-./gradlew.bat clean build
-```
-
-Output JAR will be available under:
-
-- build/libs/
-
-## GitHub Pages Deployment (Current Setup)
-
-This project uses the `github-pages/` folder as a separate Git repository connected to:
-
-- https://github.com/pranshu1606/pranshu1606.github.io
-
-To publish updates:
-
-```powershell
-git -C github-pages add .
-git -C github-pages commit -m "Update portfolio site"
-git -C github-pages push origin main
-```
-
-Your user site is served from the `main` branch of `pranshu1606.github.io`.
-
-## Notes
-
-- The Spring Boot app and GitHub Pages site are intentionally decoupled.
-- For GitHub Pages compatibility, static assets in `github-pages/index.html` should use relative paths (`./styles.css`, `./app.js`, etc.).
+- Email: pranshuthakkar.tech@gmail.com
+- GitHub: [pranshu1606](https://github.com/pranshu1606)
+- LinkedIn: [Pranshu Thakkar](https://www.linkedin.com/in/pranshu-t-aba933325/)
+- LeetCode: [pranshu_thakkar](https://leetcode.com/u/pranshu_thakkar/)
