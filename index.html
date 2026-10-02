@@ -204,6 +204,36 @@ section{position:relative}
 .checks{display:grid;gap:9px;font-size:12.5px}
 .checks div{display:flex;justify-content:space-between;align-items:center;color:var(--text-2)}
 .checks b{font-weight:500;color:var(--green);font-family:var(--mono);font-size:11.5px}
+/* in-progress project */
+.proj.wip::before{background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.02) 50%,rgba(255,159,10,.3))}
+.proj.wip .proj-glow{background:radial-gradient(closest-side,rgba(255,159,10,.14),transparent 70%);left:-200px;right:auto}
+.proj.wip .tag{color:var(--orange)}
+.proj.wip .tag .dot{background:var(--orange);animation-name:pulseO}
+@keyframes pulseO{0%{box-shadow:0 0 0 0 rgba(255,159,10,.6)}70%{box-shadow:0 0 0 8px rgba(255,159,10,0)}100%{box-shadow:0 0 0 0 rgba(255,159,10,0)}}
+.proj.wip .feat svg{color:var(--orange)}
+.proj + .proj{margin-top:20px}
+.arch{display:grid;gap:14px}
+.arch-flow{display:grid;grid-template-columns:auto 1fr auto 1fr auto;align-items:center;gap:10px}
+.node{border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);text-align:center;min-width:0}
+.node b{display:block;font-size:13px;font-weight:600;letter-spacing:-.01em}
+.node small{display:block;font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:0;margin-top:2px}
+.node.svc{background:linear-gradient(180deg,rgba(255,159,10,.12),rgba(255,159,10,.03));border-color:rgba(255,159,10,.3)}
+.node.svc.inv{background:linear-gradient(180deg,rgba(41,151,255,.12),rgba(41,151,255,.03));border-color:rgba(41,151,255,.3)}
+.node.db{margin-top:10px;padding:8px 10px;border-style:dashed}
+.node.db b{font-size:12px;font-weight:500;color:var(--text-2)}
+.wire{position:relative;height:2px;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.25));border-radius:2px;overflow:hidden}
+.wire::after{content:"";position:absolute;top:0;left:-30%;width:30%;height:100%;background:linear-gradient(90deg,transparent,var(--orange),transparent);animation:flow 2.2s linear infinite}
+.wire.b::after{background:linear-gradient(90deg,transparent,var(--blue),transparent);animation-delay:.6s}
+.wire span{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;color:var(--text-3);white-space:nowrap;letter-spacing:0}
+@keyframes flow{to{left:100%}}
+.trace{font-family:var(--mono);font-size:12px;line-height:1.75;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 16px;color:#d1d1d6;letter-spacing:0;overflow-x:auto;white-space:pre}
+.trace .m{color:var(--text-3)}.trace .ok{color:var(--green)}.trace .er{color:#ff6961}.trace .o{color:var(--orange)}.trace .b{color:var(--teal)}
+.trace div{opacity:0;transform:translateX(-6px);transition:opacity .4s,transform .4s}
+.trace.play div{opacity:1;transform:none}
+.commits{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;display:grid;gap:8px;font-size:13.5px;color:var(--text-2)}
+.commits div{display:flex;gap:12px;align-items:baseline}
+.commits code{font-family:var(--mono);font-size:12px;color:var(--orange);flex:none}
+.commits .lbl{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em}
 .gh-card{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--tile);border-radius:24px;padding:28px 34px;position:relative}
 .gh-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,rgba(255,255,255,.14),rgba(255,255,255,.02));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .gh-card h4{font-size:21px;font-weight:600;letter-spacing:-.02em}
@@ -327,6 +357,10 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
   .lead{grid-template-columns:1fr}
   .spec-row{grid-template-columns:1fr;gap:14px}
   .dash-row{grid-template-columns:1fr}
+  .arch-flow{grid-template-columns:1fr;gap:6px}
+  .wire{width:2px;height:34px;margin:0 auto;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.25))}
+  .wire::after{display:none}
+  .wire span{bottom:auto;top:50%;left:12px;transform:translateY(-50%)}
 }
 @media (max-width:600px){
   .wrap,.wide{width:calc(100% - 32px)}
@@ -514,9 +548,49 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
 <section class="pad" id="work">
   <div class="wrap">
     <div class="reveal">
-      <div class="eyebrow">Featured project</div>
-      <h2 class="h-sec silver">Data in.<br>Insight out.</h2>
+      <div class="eyebrow">Featured projects</div>
+      <h2 class="h-sec silver">Built to work.<br>Built to grow.</h2>
     </div>
+
+    <article class="proj wip reveal" id="dops">
+      <div class="proj-glow"></div>
+      <div class="proj-grid">
+        <div>
+          <span class="tag"><span class="dot"></span>Currently building · Backend</span>
+          <h3 class="silver">Distributed Order Processing</h3>
+          <p class="desc">A <b>microservices back end</b> where an Order service and an Inventory service each own their data and talk over REST — so an order is only placed when stock can actually be reserved.</p>
+          <div class="proj-feats">
+            <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Database‑per‑service: separate PostgreSQL stores for orders and inventory</div>
+            <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Service‑to‑service calls with Spring <code style="font-family:var(--mono);font-size:14px">RestClient</code> — check stock, then reserve it</div>
+            <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Bean Validation with field‑level 400s, and central exception handlers returning clean 404 / 409 responses</div>
+            <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Layered controller → service → repository design on Spring Data JPA</div>
+          </div>
+          <div class="chips"><span class="chip">Java 17</span><span class="chip">Spring Boot 4</span><span class="chip">Spring Data JPA</span><span class="chip">PostgreSQL</span><span class="chip">REST</span><span class="chip">Lombok</span></div>
+          <div class="commits">
+            <span class="lbl">Recent commits</span>
+            <div><code>90adf7c</code>Exception handling and other related updates</div>
+            <div><code>2ff8f75</code>Final inventory managing</div>
+            <div><code>e4d1af4</code>Build Inventory Service REST API</div>
+          </div>
+          <p style="margin-top:22px"><a class="link" href="https://github.com/pranshu1606/distributed-order-processing-system" target="_blank" rel="noopener">View on GitHub <span class="chev">›</span></a></p>
+          <div class="when">Started Sep 2026 · in progress</div>
+        </div>
+
+        <div class="dash" aria-label="Architecture: client calls order-service on port 8080, which calls inventory-service on port 8081; each service has its own PostgreSQL database.">
+          <div class="mac-bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="mac-title">architecture — live trace</span></div>
+          <div class="dash-body arch">
+            <div class="arch-flow" aria-hidden="true">
+              <div class="node"><b>Client</b><small>HTTP</small></div>
+              <div class="wire"><span>POST /orders</span></div>
+              <div><div class="node svc"><b>order‑service</b><small>:8080</small></div><div class="node db"><b>order_db</b><small>postgres</small></div></div>
+              <div class="wire b"><span>RestClient</span></div>
+              <div><div class="node svc inv"><b>inventory‑service</b><small>:8081</small></div><div class="node db"><b>inventory_db</b><small>postgres</small></div></div>
+            </div>
+<div class="trace" id="trace" aria-hidden="true"><div><span class="o">→ POST</span> /orders <span class="m">{ productId: 42, quantity: 3 }</span></div><div>  <span class="b">↳ GET </span> /inventory/42            <span class="ok">200</span> <span class="m">qty=10</span></div><div>  <span class="b">↳ PUT </span> /inventory/42/reduce?quantity=3 <span class="ok">200</span> <span class="m">qty=7</span></div><div><span class="ok">← 200</span> order saved to order_db</div><div class="m">──────────────────────────────────────</div><div><span class="b">PUT</span> /inventory/42/reduce?quantity=99 <span class="er">409</span> <span class="m">Not enough inventory</span></div><div><span class="b">GET</span> /inventory/404                 <span class="er">404</span> <span class="m">Product not found</span></div><div><span class="o">POST</span> /orders { quantity: 0 }        <span class="er">400</span> <span class="m">quantity: must be greater than or equal to 1</span></div></div>
+          </div>
+        </div>
+      </div>
+    </article>
 
     <article class="proj reveal">
       <div class="proj-glow"></div>
@@ -795,7 +869,8 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
       const el = en.target;
       el.classList.add('in');
       $$('[data-count]', el).forEach(countUp);
-      if (el.matches('.proj')) $$('#bars i').forEach((b, i) => setTimeout(() => b.style.height = b.dataset.h + '%', i * 70));
+      if (el.id === 'dops') { const tr = $('#trace'); $$('div', tr).forEach((d, i) => d.style.transitionDelay = (reduce ? 0 : 0.3 + i * 0.35) + 's'); tr.classList.add('play'); }
+      if (el.matches('.proj:not(#dops)')) $$('#bars i').forEach((b, i) => setTimeout(() => b.style.height = b.dataset.h + '%', i * 70));
       io.unobserve(el);
     });
   }, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
@@ -817,7 +892,8 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     ['out', '{ <span class="k">"lang"</span>: [<span class="s">"Java"</span>, <span class="s">"Python"</span>, <span class="s">"SQL"</span>, <span class="s">"C"</span>],'],
     ['out', '  <span class="k">"backend"</span>: [<span class="s">"Spring Boot"</span>, <span class="s">"REST"</span>, <span class="s">"JPA"</span>],'],
     ['out', '  <span class="k">"ops"</span>: [<span class="s">"Docker"</span>, <span class="s">"CI/CD"</span>, <span class="s">"AWS"</span>] }'],
-    ['cmd', 'git log --oneline -2'],
+    ['cmd', 'git log --oneline -3'],
+    ['out', '<span class="s">c4e81d0</span> wip: distributed order processing (Spring Boot)'],
     ['out', '<span class="s">a1f9c2e</span> intern: shipped data workflows @ mPHATEK'],
     ['out', '<span class="s">7d03b8a</span> feat: KineticAI analytics + validation'],
     ['cmd', 'ready --for internships'],
@@ -893,6 +969,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
   const items = [
     { g: 'Sections', t: 'Overview', h: '#overview', c: '#2997ff', i: '◎' },
     { g: 'Sections', t: 'Experience — mPHATEK Systems', h: '#experience', c: '#5e5ce6', i: '◆' },
+    { g: 'Sections', t: 'Project — Distributed Order Processing', h: '#dops', c: '#ff9f0a', i: '⇄' },
     { g: 'Sections', t: 'Project — KineticAI', h: '#work', c: '#30d158', i: '▲' },
     { g: 'Sections', t: 'Skills', h: '#skills', c: '#ff9f0a', i: '✦' },
     { g: 'Sections', t: 'Tech Specs', h: '#specs', c: '#8e8e93', i: '≡' },
