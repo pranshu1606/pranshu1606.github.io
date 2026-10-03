@@ -1052,6 +1052,37 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
   });
 })();
 </script>
-<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="pranshu16" data-description="Support me on Buy me a coffee!" data-message="How about you buy me a coffee ;)" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+<!-- Buy Me a Coffee popup -->
+<style>
+.bmc-pop{position:fixed;right:96px;bottom:50px;translate:0 50%;z-index:9998;display:flex;align-items:center;gap:10px;max-width:min(300px,calc(100vw - 116px));padding:9px 10px 9px 16px;border-radius:14px;background:rgba(28,28,30,.78);border:1px solid var(--line-2);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);box-shadow:0 12px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.35;letter-spacing:-.016em;cursor:pointer;opacity:0;transform:translateX(10px) scale(.96);transform-origin:right center;pointer-events:none;transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.bmc-pop.show{opacity:1;transform:none;pointer-events:auto}
+.bmc-pop::after{content:"";position:absolute;right:-6px;top:50%;width:11px;height:11px;margin-top:-6px;background:inherit;border-top:1px solid var(--line-2);border-right:1px solid var(--line-2);transform:rotate(45deg);border-radius:0 3px 0 0}
+.bmc-pop b{font-weight:600;color:var(--blue)}
+.bmc-pop:hover b{text-decoration:underline}
+.bmc-pop button{flex:none;width:22px;height:22px;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:var(--text-2);font:inherit;font-size:13px;line-height:22px;cursor:pointer;transition:background .2s,color .2s}
+.bmc-pop button:hover{background:rgba(255,255,255,.18);color:var(--text)}
+@media (prefers-reduced-motion:reduce){.bmc-pop{transition:opacity .2s}}
+</style>
+<div class="bmc-pop" id="bmcPop" role="button" tabindex="0" aria-label="Support me on Buy Me a Coffee">
+  <span>How about a coffee? <b>Click here to support me</b></span>
+  <button type="button" aria-label="Dismiss">&#x2715;</button>
+</div>
+<script>
+(() => {
+  const pop = document.getElementById('bmcPop');
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem('bmcPopDismissed') === '1'; } catch (e) {}
+  const hide = () => {
+    pop.classList.remove('show');
+    try { sessionStorage.setItem('bmcPopDismissed', '1'); } catch (e) {}
+  };
+  const openWidget = () => { const b = document.getElementById('bmc-wbtn'); if (b) b.click(); };
+  if (!dismissed) setTimeout(() => { if (document.getElementById('bmc-wbtn')) pop.classList.add('show'); }, 1800);
+  pop.addEventListener('click', e => { if (e.target.closest('button')) { e.stopPropagation(); hide(); return; } hide(); openWidget(); });
+  pop.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target === pop) { e.preventDefault(); hide(); openWidget(); } });
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#bmc-wbtn')) hide(); });
+})();
+</script>
+<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="pranshu16" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 </html>
