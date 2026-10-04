@@ -136,7 +136,7 @@ section{position:relative}
 .status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:#d2d2d7;padding:7px 14px 7px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line-2);backdrop-filter:blur(10px)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(48,209,88,.6);animation:pulse 2s infinite}
 @keyframes pulse{70%{box-shadow:0 0 0 8px rgba(48,209,88,0)}100%{box-shadow:0 0 0 0 rgba(48,209,88,0)}}
-.hero h1{margin:28px auto 0;max-width:980px;font-size:clamp(44px,8vw,96px);font-weight:700;line-height:1.02;letter-spacing:-.045em}
+.hero h1{margin:0 auto;max-width:980px;font-size:clamp(44px,8vw,96px);font-weight:700;line-height:1.02;letter-spacing:-.045em}
 .hero h1 .accent{background:linear-gradient(90deg,#2997ff 0%,#a970ff 50%,#ff6fa8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero .lede{margin:26px auto 0;max-width:680px;font-size:clamp(19px,2vw,24px);line-height:1.38;color:var(--text-2);letter-spacing:-.015em}
 .hero .lede b{color:var(--text);font-weight:600}
@@ -201,7 +201,8 @@ section{position:relative}
 .xp{display:grid;grid-template-columns:340px 1fr;gap:20px;margin-top:64px}
 .xp-card{background:var(--tile);border-radius:28px;padding:36px;position:relative;overflow:hidden}
 .xp-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,rgba(255,255,255,.16),rgba(255,255,255,.02) 55%,rgba(255,255,255,.05));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.xp-id .app{color:#fff;width:76px;height:76px;border-radius:18px;background:linear-gradient(145deg,#5e5ce6,#2997ff);display:grid;place-items:center;font-weight:800;font-size:30px;letter-spacing:-.04em;box-shadow:0 18px 40px -10px rgba(41,151,255,.6),inset 0 1px 0 rgba(255,255,255,.35)}
+.xp-id .app{display:inline-flex;align-items:center;padding:14px 18px;border-radius:18px;background:#fff;box-shadow:0 18px 40px -14px rgba(41,151,255,.45),0 0 0 1px rgba(0,0,0,.06)}
+.xp-id .app img{height:48px;width:auto}
 .xp-id h3{font-size:28px;font-weight:700;letter-spacing:-.025em;margin-top:24px;line-height:1.1}
 .xp-id .role{color:var(--text-2);margin-top:6px}
 .xp-id .when{margin-top:22px;font-size:14px;color:var(--text-3)}
@@ -534,7 +535,6 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
 <section class="hero" id="hero">
   <div class="hero-glow"></div>
   <div class="wrap hero-inner" id="heroInner">
-    <span class="status"><span class="dot"></span>Open to 2027 internships &amp; collaborations</span>
     <h1><span class="silver">Software, built with</span><br><span class="accent">precision and care.</span></h1>
     <p class="lede"><b>Pranshu Thakkar</b> — Computer Science undergrad at Manipal Institute of Technology, Bengaluru. I turn real requirements into reliable, well-tested software.</p>
     <div class="ctas">
@@ -641,7 +641,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     </div>
     <div class="xp">
       <div class="xp-card xp-id reveal">
-        <div class="app">m</div>
+        <div class="app"><img src="mphatek-logo.png" alt="mPHATEK Systems" width="152" height="48"></div>
         <h3>mPHATEK Systems</h3>
         <div class="role">Software Developer Intern</div>
         <div class="when">May 2026 – Aug 2026</div>
