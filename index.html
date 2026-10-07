@@ -344,6 +344,19 @@ section{position:relative}
 .spec-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px}
 .lchip{display:inline-flex;align-items:center;height:30px;padding:0 13px;border-radius:999px;background:#fff;border:1px solid #d2d2d7;font-size:14px;color:#1d1d1f}
 .lchips{display:flex;flex-wrap:wrap;gap:8px}
+.specs{--card:#fff}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.badge{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:var(--card);border:1px solid rgba(0,0,0,.06);color:#1d1d1f;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+a.badge:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08)}
+.b-ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font-size:18px;font-weight:700;letter-spacing:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 4px 10px -4px rgba(0,0,0,.3)}
+.b-tx{flex:1;min-width:0}
+.b-tx b{display:block;font-size:15px;font-weight:600;line-height:1.3;letter-spacing:-.01em}
+.b-tx small{display:block;font-size:13px;color:#6e6e73;margin-top:3px}
+.b-v{flex:none;font-size:13px;color:#0066cc;white-space:nowrap}
+.spec-row a.badge{color:#1d1d1f}
+.spec-row a.badge:hover{text-decoration:none}
+a.badge:hover .b-v{text-decoration:underline}
+.done-line{margin-top:12px;font-size:14px;font-weight:600;color:#30d158}
 
 /* ---------- Leadership ---------- */
 .lead{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:64px}
@@ -500,6 +513,8 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
 [data-theme=light] .paddle:hover{background:rgba(0,0,0,.1)}
 [data-theme=light] .specs{background:#fff}
 [data-theme=light] .lchip{background:#f5f5f7}
+[data-theme=light] .specs{--card:#f5f5f7}
+[data-theme=light] .done-line{color:#248a3d}
 [data-theme=light] .contact-glow{background:radial-gradient(closest-side,rgba(0,113,227,.16),rgba(191,90,242,.08) 50%,transparent 75%)}
 [data-theme=light] .dock{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.08);box-shadow:0 20px 50px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.8)}
 [data-theme=light] .dock a .ic{box-shadow:0 6px 14px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.35)}
@@ -636,8 +651,8 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
       <div class="tile t-4 reveal rv-zoom d2">
         <span class="spot"></span>
         <div class="lbl">Certifications</div>
-        <div class="stat g-blue"><span data-count="3">0</span></div>
-        <p>Java, Python and Generative AI — each verifiable.</p>
+        <div class="stat g-blue"><span data-count="11">0</span></div>
+        <p>From <b>AWS, Anthropic, Google and IBM</b> — cloud, AI, data and programming.</p>
       </div>
       <div class="tile t-12 reveal rv-zoom">
         <span class="spot"></span>
@@ -787,7 +802,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     </div>
   </div>
   <div class="track" id="track" data-stagger="right">
-    <article class="card c-aws"><div class="lbl"><span class="wip-badge"><span class="dot"></span>Currently preparing</span></div><h3>AWS Certified Cloud Practitioner.</h3><div class="art"><span class="aws-mark">aws<svg viewBox="0 0 120 22" aria-hidden="true"><path d="M4 6c30 16 80 16 108 2" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round"/><path d="M102 4l12 3-6 10" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="chips"><span class="chip">Cloud Concepts</span><span class="chip">Security &amp; Compliance</span><span class="chip">Core Services</span><span class="chip">Billing &amp; Pricing</span></div></article>
+    <article class="card c-aws"><div class="lbl"><span class="wip-badge"><span class="dot"></span>Currently preparing</span></div><h3>AWS Certified Cloud Practitioner.</h3><p class="done-line">✓ Cloud Practitioner Essentials completed</p><div class="art"><span class="aws-mark">aws<svg viewBox="0 0 120 22" aria-hidden="true"><path d="M4 6c30 16 80 16 108 2" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round"/><path d="M102 4l12 3-6 10" fill="none" stroke="#ff9900" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="chips"><span class="chip">Cloud Concepts</span><span class="chip">Security &amp; Compliance</span><span class="chip">Core Services</span><span class="chip">Billing &amp; Pricing</span></div></article>
     <article class="card c-blue"><div class="lbl">Programming</div><h3>Fluent in the languages that run the world.</h3><div class="art"><span class="glyph">{ }</span></div><div class="chips"><span class="chip">Java</span><span class="chip">Python</span><span class="chip">C</span><span class="chip">SQL</span><span class="chip">JavaScript</span></div></article>
     <article class="card c-purple"><div class="lbl">CS Fundamentals</div><h3>The foundations, done properly.</h3><div class="art"><span class="glyph">O(n)</span></div><div class="chips"><span class="chip">Data Structures</span><span class="chip">Algorithms</span><span class="chip">OOP</span><span class="chip">DBMS</span><span class="chip">Operating Systems</span></div></article>
     <article class="card c-green"><div class="lbl">Software Development</div><h3>APIs and back ends that hold together.</h3><div class="art"><span class="glyph">/api</span></div><div class="chips"><span class="chip">REST APIs</span><span class="chip">Spring Boot</span><span class="chip">Spring JPA</span><span class="chip">JDBC</span><span class="chip">Git</span></div></article>
@@ -825,10 +840,24 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
       <div class="spec-row"><h4>Class X · ICSE</h4><div><div class="big">96%</div><p class="muted" style="margin-top:10px">Blue Ridge Public School, Pune · Apr 2013 – Mar 2022</p></div></div>
     </div>
 
-    <div class="spec-panel" data-stagger data-panel="cert" hidden>
-      <div class="spec-row"><h4>Java</h4><div><p style="font-size:19px;font-weight:600">Fundamentals of Java Programming</p><p style="margin-top:6px"><a href="https://coursera.org/share/88ae32095d0c22fb30572072f54fbb65" target="_blank" rel="noopener">Verify credential ›</a></p></div></div>
-      <div class="spec-row"><h4>Python</h4><div><p style="font-size:19px;font-weight:600">Programming for Everybody (Getting Started with Python)</p><p style="margin-top:6px"><a href="https://coursera.org/share/6bc4cce53ae5e7dad8d96f5c49853512" target="_blank" rel="noopener">Verify credential ›</a></p></div></div>
-      <div class="spec-row"><h4>AI</h4><div><p style="font-size:19px;font-weight:600">Introduction to Generative AI</p><p style="margin-top:6px"><a href="https://coursera.org/share/8a45557f49753b166d0abd052781adff" target="_blank" rel="noopener">Verify credential ›</a></p></div></div>
+    <div class="spec-panel" data-panel="cert" hidden>
+      <div class="spec-row"><h4>Cloud &amp; AI</h4><div class="badges" data-stagger>
+        <div class="badge"><span class="b-ic" style="--c:linear-gradient(145deg,#ffb340,#ff9900)" aria-hidden="true">☁</span><span class="b-tx"><b>AWS Cloud Practitioner Essentials</b><small>AWS Training &amp; Certification · Oct 2026</small></span></div>
+        <a class="badge" href="https://academy.claude.com/verify/760d8f313cbabd05944cab6f443565f4" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#e69375,#d97757)" aria-hidden="true">C</span><span class="b-tx"><b>Claude 101</b><small>Anthropic · Claude Academy · Oct 2026</small></span><span class="b-v">Verify ›</span></a>
+        <a class="badge" href="https://academy.claude.com/verify/9637e5cc91a58f7402ad5b8b4c990eec" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#e69375,#d97757)" aria-hidden="true">C</span><span class="b-tx"><b>AI Fluency: Framework &amp; Foundations</b><small>Anthropic · Claude Academy · Oct 2026</small></span><span class="b-v">Verify ›</span></a>
+        <div class="badge"><span class="b-ic" style="--c:linear-gradient(145deg,#a78bfa,#6d4aff)" aria-hidden="true">F</span><span class="b-tx"><b>Agent Explorer</b><small>Founderz × Microsoft · 2026</small></span></div>
+        <a class="badge" href="https://coursera.org/verify/O8X065KENXZ6" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#6aa5ff,#4285f4)" aria-hidden="true">G</span><span class="b-tx"><b>Introduction to Generative AI</b><small>Google Cloud · Coursera · Dec 2024</small></span><span class="b-v">Verify ›</span></a>
+      </div></div>
+      <div class="spec-row"><h4>Data &amp; Systems</h4><div class="badges" data-stagger>
+        <div class="badge"><span class="b-ic" style="--c:linear-gradient(145deg,#4589ff,#0f62fe)" aria-hidden="true">I</span><span class="b-tx"><b>Unstructured Databases</b><small>IBM SkillsBuild · Apr 2026</small></span></div>
+        <div class="badge"><span class="b-ic" style="--c:linear-gradient(145deg,#4589ff,#0f62fe)" aria-hidden="true">I</span><span class="b-tx"><b>Linux on IBM LinuxONE</b><small>IBM SkillsBuild · Mar 2026</small></span></div>
+        <a class="badge" href="https://coursera.org/verify/NJAN6WS0OX9H" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#4589ff,#0f62fe)" aria-hidden="true">I</span><span class="b-tx"><b>Introduction to Data Analytics</b><small>IBM · Coursera · Oct 2025</small></span><span class="b-v">Verify ›</span></a>
+      </div></div>
+      <div class="spec-row"><h4>Programming &amp; Security</h4><div class="badges" data-stagger>
+        <a class="badge" href="https://coursera.org/verify/1QDEBEEAUYK5" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#5fd07e,#34a853)" aria-hidden="true">G</span><span class="b-tx"><b>Foundations of Cybersecurity</b><small>Google · Coursera · Dec 2024</small></span><span class="b-v">Verify ›</span></a>
+        <a class="badge" href="https://coursera.org/verify/L0LDODH69GWQ" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#1d4f8c,#00274c)" aria-hidden="true">M</span><span class="b-tx"><b>Programming for Everybody (Python)</b><small>University of Michigan · Coursera · Dec 2024</small></span><span class="b-v">Verify ›</span></a>
+        <a class="badge" href="https://coursera.org/share/88ae32095d0c22fb30572072f54fbb65" target="_blank" rel="noopener"><span class="b-ic" style="--c:linear-gradient(145deg,#ff8a3d,#e76f00)" aria-hidden="true">J</span><span class="b-tx"><b>Fundamentals of Java Programming</b><small>Coursera</small></span><span class="b-v">Verify ›</span></a>
+      </div></div>
     </div>
   </div>
 </section>
@@ -1168,6 +1197,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     { g: 'Sections', t: 'Project — KineticAI', h: '#work', c: '#30d158', i: '▲' },
     { g: 'Sections', t: 'Skills', h: '#skills', c: '#ff9f0a', i: '✦' },
     { g: 'Sections', t: 'Tech Specs', h: '#specs', c: '#8e8e93', i: '≡' },
+    { g: 'Sections', t: 'Certifications', h: 'cert', c: '#ff9f0a', i: '✓' },
     { g: 'Sections', t: 'Contact', h: '#contact', c: '#ff375f', i: '✉' },
     { g: 'Links', t: 'Email Pranshu', h: 'mailto:pranshuthakkar.tech@gmail.com', c: '#007aff', i: '@', x: 'Mail' },
     { g: 'Links', t: 'GitHub — pranshu1606', h: 'https://github.com/pranshu1606', c: '#3a3a3c', i: 'gh', x: 'Open' },
@@ -1195,6 +1225,7 @@ footer{background:#0a0a0c;border-top:1px solid var(--line);font-size:12px;color:
     close();
     if (!it) return;
     if (it.h === 'theme') toggleTheme();
+    else if (it.h === 'cert') { $('.spec-tabs [data-tab="cert"]').click(); $('#specs').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); }
     else if (it.h.startsWith('#')) $(it.h).scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
     else if (it.h.startsWith('mailto:')) location.href = it.h;
     else window.open(it.h, '_blank', 'noopener');
