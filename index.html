@@ -308,11 +308,36 @@ section{position:relative}
 .commits div{display:flex;gap:12px;align-items:baseline}
 .commits code{font-family:var(--mono);font-size:12px;color:var(--orange);flex:none}
 .commits .lbl{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em}
-.gh-card{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--tile);border-radius:24px;padding:28px 34px;position:relative}
+.gh-card{margin-top:20px;background:var(--tile);border-radius:24px;padding:28px 34px;position:relative}
+.gh-head{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .gh-card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(140deg,rgba(255,255,255,.14),rgba(255,255,255,.02));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 .gh-card h4{font-size:21px;font-weight:600;letter-spacing:-.02em}
 .gh-card p{color:var(--text-2);font-size:15px;margin-top:2px}
 .gh-l{display:flex;align-items:center;gap:18px}
+.gh-card{--g0:rgba(255,255,255,.06);--g1:#0e4429;--g2:#006d32;--g3:#26a641;--g4:#39d353}
+[data-theme=light] .gh-card{--g0:#e3e3e8;--g1:#9be9a8;--g2:#40c463;--g3:#30a14e;--g4:#216e39}
+.gh-body{margin-top:28px;padding-top:26px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr);gap:30px}
+.gh-body[hidden],.gh-graph[hidden],.gh-recent[hidden]{display:none}
+.gh-scroll{overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.gh-scroll::-webkit-scrollbar{display:none}
+.gh-months{position:relative;height:18px;font-size:11px;color:var(--text-3)}
+.gh-months span{position:absolute;top:0}
+.gh-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,11px);grid-auto-columns:11px;gap:3px;width:max-content}
+.gh-grid i,.gh-key i{display:block;width:11px;height:11px;border-radius:3px;background:var(--g0)}
+.gh-grid i.l1,.gh-key i.l1{background:var(--g1)}.gh-grid i.l2,.gh-key i.l2{background:var(--g2)}
+.gh-grid i.l3,.gh-key i.l3{background:var(--g3)}.gh-grid i.l4,.gh-key i.l4{background:var(--g4)}
+.gh-grid i.pad{visibility:hidden}
+.gh-legend{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--text-2)}
+.gh-key{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--text-3)}
+.gh-key i{margin:0 1px}
+.gh-recent .lbl{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em}
+.gh-commits{list-style:none;margin-top:8px}
+.gh-commits a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 16px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
+.gh-commits li:first-child a{border-top:0}
+.gh-commits .msg{font-size:15px;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gh-commits a:hover .msg{text-decoration:underline}
+.gh-commits .repo{grid-column:1;font-family:var(--mono);font-size:12px;color:var(--text-3);letter-spacing:0}
+.gh-commits time{grid-column:2;grid-row:1;font-size:13px;color:var(--text-3);white-space:nowrap}
 
 /* ---------- Pinned build (featured project only) ---------- */
 .pin-stage{position:relative;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center}
@@ -901,12 +926,27 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
       </div>
     </article>
 
-    <div class="gh-card reveal">
+    <div class="gh-card reveal" id="ghLive">
+      <div class="gh-head">
       <div class="gh-l">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
-        <div><h4>More in the workshop.</h4><p>Experiments, coursework and side projects live on GitHub.</p></div>
+        <div><h4>More in the workshop.</h4><p>Experiments, coursework and side projects — live from GitHub.</p></div>
       </div>
       <a class="link" href="https://github.com/pranshu1606" target="_blank" rel="noopener">github.com/pranshu1606 <span class="chev">›</span></a>
+      </div>
+      <div class="gh-body" id="ghBody" hidden>
+        <div class="gh-graph" id="ghGraph" hidden>
+          <div class="gh-scroll" id="ghScroll">
+            <div class="gh-months" id="ghMonths" aria-hidden="true"></div>
+            <div class="gh-grid" id="ghGrid" role="img"></div>
+          </div>
+          <div class="gh-legend"><span id="ghTotal"></span><span class="gh-key" aria-hidden="true">Less <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More</span></div>
+        </div>
+        <div class="gh-recent" id="ghRecent" hidden>
+          <span class="lbl" id="ghRecentLbl">Recent commits</span>
+          <ol class="gh-commits" id="ghCommits" aria-labelledby="ghRecentLbl"></ol>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -1256,6 +1296,91 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
     b.setAttribute('aria-expanded', open);
     b.closest('li').classList.toggle('open', open);
   }));
+
+  /* Live GitHub activity: contribution grid + latest commits, fetched when the card nears view */
+  const GH_USER = 'pranshu1606';
+  const ghLive = $('#ghLive');
+  const ghFetch = url => {
+    const ac = new AbortController(), t = setTimeout(() => ac.abort(), 8000);
+    return fetch(url, { signal: ac.signal }).then(r => { clearTimeout(t); if (!r.ok) throw new Error(r.status); return r.json(); });
+  };
+  /* Undo UTF-8 text that was mis-decoded as Latin-1 somewhere upstream ("rÃ©sumÃ©" -> "résumé") */
+  const fixText = t => { if (!/[ÃÂâ][\u0080-ÿ]/.test(t)) return t; try { return decodeURIComponent(escape(t)); } catch (e) { return t; } };
+  const ago = d => {
+    const sec = (new Date(d) - Date.now()) / 1000, rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+    for (const [u, n] of [['year', 31536000], ['month', 2592000], ['week', 604800], ['day', 86400], ['hour', 3600], ['minute', 60]])
+      if (Math.abs(sec) >= n) return rtf.format(Math.round(sec / n), u);
+    return 'just now';
+  };
+  const renderGraph = data => {
+    const days = data.contributions, total = data.total && (data.total.lastYear ?? Object.values(data.total)[0]);
+    if (!days || !days.length) return;
+    const grid = $('#ghGrid'), months = $('#ghMonths'), frag = document.createDocumentFragment();
+    const fmt = new Intl.DateTimeFormat('en', { weekday: 'short', month: 'short', day: 'numeric' });
+    const first = new Date(days[0].date + 'T00:00:00');
+    for (let i = 0; i < first.getDay(); i++) { const pad = document.createElement('i'); pad.className = 'pad'; frag.append(pad); }
+    let lastMonth = -1, lastCol = -9;
+    const cols = Math.ceil((days.length + first.getDay()) / 7);
+    days.forEach((d, i) => {
+      const date = new Date(d.date + 'T00:00:00'), col = Math.floor((i + first.getDay()) / 7);
+      const c = document.createElement('i');
+      c.className = 'l' + d.level;
+      c.title = `${d.count || 'No'} contribution${d.count === 1 ? '' : 's'} on ${fmt.format(date)}`;
+      frag.append(c);
+      /* label a column when its first day starts a new month; keep labels apart and inside the grid */
+      if ((date.getDay() === 0 || i === 0) && date.getMonth() !== lastMonth) {
+        lastMonth = date.getMonth();
+        if (col - lastCol >= 3 && col <= cols - 3) {
+          lastCol = col;
+          const m = document.createElement('span');
+          m.textContent = date.toLocaleString('en', { month: 'short' });
+          m.style.left = col * 14 + 'px';
+          months.append(m);
+        }
+      }
+    });
+    grid.replaceChildren(frag);
+    const label = `${total} contributions in the last year`;
+    grid.setAttribute('aria-label', label);
+    $('#ghTotal').textContent = label;
+    $('#ghGraph').hidden = false;
+  };
+  const renderCommits = data => {
+    const items = (data.items || []).filter(c => !/^Merge (pull request|branch|remote)/.test(c.commit.message)).slice(0, 2);
+    if (!items.length) return;
+    const list = $('#ghCommits'), frag = document.createDocumentFragment();
+    items.forEach(c => {
+      const li = document.createElement('li'), a = document.createElement('a');
+      a.href = c.html_url; a.target = '_blank'; a.rel = 'noopener';
+      const msg = document.createElement('span'); msg.className = 'msg';
+      msg.textContent = fixText(c.commit.message.split('\n')[0]);
+      const repo = document.createElement('span'); repo.className = 'repo';
+      repo.textContent = c.repository.full_name.replace(GH_USER + '/', '');
+      const when = document.createElement('time'); when.dateTime = c.commit.author.date;
+      when.textContent = ago(c.commit.author.date);
+      a.append(msg, when, repo); li.append(a); frag.append(li);
+    });
+    list.replaceChildren(frag);
+    $('#ghRecent').hidden = false;
+  };
+  const loadGitHub = async () => {
+    let cache = null;
+    try { cache = JSON.parse(sessionStorage.getItem('gh-live-v1')); } catch (e) {}
+    if (!cache || Date.now() - cache.t > 10 * 60 * 1000) {
+      const [g, c] = await Promise.allSettled([
+        ghFetch(`https://github-contributions-api.jogruber.de/v4/${GH_USER}?y=last`),
+        ghFetch(`https://api.github.com/search/commits?q=author:${GH_USER}&sort=author-date&order=desc&per_page=12`)
+      ]);
+      cache = { t: Date.now(), graph: g.status === 'fulfilled' ? g.value : null, commits: c.status === 'fulfilled' ? c.value : null };
+      if (cache.graph && cache.commits) try { sessionStorage.setItem('gh-live-v1', JSON.stringify(cache)); } catch (e) {}
+    }
+    try { if (cache.graph) renderGraph(cache.graph); } catch (e) {}
+    try { if (cache.commits) renderCommits(cache.commits); } catch (e) {}
+    if (!$('#ghGraph').hidden || !$('#ghRecent').hidden) $('#ghBody').hidden = false;
+    /* newest weeks first on narrow screens */
+    const sc = $('#ghScroll'); sc.scrollLeft = sc.scrollWidth;
+  };
+  new IntersectionObserver((en, o) => { if (en[0].isIntersecting) { o.disconnect(); loadGitHub(); } }, { rootMargin: '600px 0px' }).observe(ghLive);
 
   /* Cursor spotlight on tiles */
   $$('.tile').forEach(t => t.addEventListener('pointermove', e => {
