@@ -820,13 +820,13 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
             <ol class="pin-steps" aria-hidden="true">
               <li data-from="0"><b>A client places an order.</b><span><span>POST /orders reaches the Order service on :8080.</span></span></li>
               <li data-from="3"><b>Order asks Inventory.</b><span><span>A service‑to‑service REST call with Spring RestClient.</span></span></li>
-              <li data-from="5"><b>Each service owns its data.</b><span><span>Separate PostgreSQL databases — no shared tables.</span></span></li>
+              <li data-from="5"><b>Each service owns its data.</b><span><span>Separate PostgreSQL databases, with Redis caching stock reads.</span></span></li>
               <li data-from="6"><b>Check stock, then reserve it.</b><span><span>The order is saved only when inventory can be reduced.</span></span></li>
               <li data-from="7"><b>Bad requests fail cleanly.</b><span><span>Field‑level 400s, plus clear 404 and 409 responses.</span></span></li>
             </ol>
           </div>
 
-          <div class="dash" aria-label="Architecture: client calls order-service on port 8080, which calls inventory-service on port 8081; each service has its own PostgreSQL database.">
+          <div class="dash" aria-label="Architecture: client calls order-service on port 8080, which calls inventory-service on port 8081; each service has its own PostgreSQL database, and inventory reads are cached in Redis.">
             <div class="mac-bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="mac-title">architecture — live trace</span></div>
             <div class="dash-body arch">
               <div class="arch-flow" aria-hidden="true">
@@ -834,7 +834,7 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
                 <div class="wire" data-s="1"><span>POST /orders</span></div>
                 <div><div class="node svc" data-s="2"><b>order‑service</b><small>:8080</small></div><div class="node db" data-s="5"><b>order_db</b><small>postgres</small></div></div>
                 <div class="wire b" data-s="3"><span>RestClient</span></div>
-                <div><div class="node svc inv" data-s="4"><b>inventory‑service</b><small>:8081</small></div><div class="node db" data-s="5" style="--i:1"><b>inventory_db</b><small>postgres</small></div></div>
+                <div><div class="node svc inv" data-s="4"><b>inventory‑service</b><small>:8081</small></div><div class="node db" data-s="5" style="--i:1"><b>inventory_db</b><small>postgres</small></div><div class="node db" data-s="5" style="--i:2"><b>redis</b><small>cache · 60s</small></div></div>
               </div>
 <div class="trace" id="trace" aria-hidden="true"><div data-s="6"><span class="o">→ POST</span> /orders <span class="m">{ productId: 42, quantity: 3 }</span></div><div data-s="6" style="--i:1">  <span class="b">↳ GET </span> /inventory/42            <span class="ok">200</span> <span class="m">qty=10</span></div><div data-s="6" style="--i:2">  <span class="b">↳ PUT </span> /inventory/42/reduce?quantity=3 <span class="ok">200</span> <span class="m">qty=7</span></div><div data-s="6" style="--i:3"><span class="ok">← 200</span> order saved to order_db</div><div class="m" data-s="7">──────────────────────────────────────</div><div data-s="7" style="--i:1"><span class="b">PUT</span> /inventory/42/reduce?quantity=99 <span class="er">409</span> <span class="m">Not enough inventory</span></div><div data-s="7" style="--i:2"><span class="b">GET</span> /inventory/404                 <span class="er">404</span> <span class="m">Product not found</span></div><div data-s="7" style="--i:3"><span class="o">POST</span> /orders { quantity: 0 }        <span class="er">400</span> <span class="m">quantity: must be greater than or equal to 1</span></div></div>
             </div>
@@ -845,17 +845,19 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
       <div class="proj-more">
             <div class="proj-feats" data-stagger>
               <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Database‑per‑service: separate PostgreSQL stores for orders and inventory</div>
-              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Service‑to‑service calls with Spring <code style="font-family:var(--mono);font-size:14px">RestClient</code> — check stock, then reserve it</div>
-              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Bean Validation with field‑level 400s, and central exception handlers returning clean 404 / 409 responses</div>
-              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Layered controller → service → repository design on Spring Data JPA</div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Service‑to‑service calls with Spring <code style="font-family:var(--mono);font-size:14px">RestClient</code> — check stock, then reserve it</span></div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span>Redis cache‑aside with <code style="font-family:var(--mono);font-size:14px">@Cacheable</code> — stock reads cached for 60s, evicted the moment stock is reduced</span></div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Request DTOs and Bean Validation, with central handlers returning clean 400 / 404 / 409 responses</div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Multi‑stage Docker images; one Docker Compose file starts both services, PostgreSQL and Redis with health checks</div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Unit tests with JUnit 5 and Mockito, plus MockMvc controller tests</div>
             </div>
         <div>
-            <div class="chips"><span class="chip">Java 17</span><span class="chip">Spring Boot 4</span><span class="chip">Spring Data JPA</span><span class="chip">PostgreSQL</span><span class="chip">REST</span><span class="chip">Lombok</span></div>
+            <div class="chips"><span class="chip">Java 17</span><span class="chip">Spring Boot 4</span><span class="chip">Spring Data JPA</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">JUnit 5</span><span class="chip">Mockito</span></div>
             <div class="commits">
               <span class="lbl">Recent commits</span>
-              <div><code>90adf7c</code>Exception handling and other related updates</div>
-              <div><code>2ff8f75</code>Final inventory managing</div>
-              <div><code>e4d1af4</code>Build Inventory Service REST API</div>
+              <div><code>ba38b73</code>Add request DTOs, Redis caching, Docker Compose setup and order tests</div>
+              <div><code>43edba1</code>Return 409 from Order Service when inventory is insufficient</div>
+              <div><code>637898d</code>Add custom exceptions and fix inventory reduction check</div>
             </div>
             <p style="margin-top:22px"><a class="link" href="https://github.com/pranshu1606/distributed-order-processing-system" target="_blank" rel="noopener">View on GitHub <span class="chev">›</span></a></p>
             <div class="when">Started Sep 2026 · in progress</div>
