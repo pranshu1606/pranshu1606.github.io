@@ -816,7 +816,7 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
           <div class="pin-copy reveal">
             <span class="tag"><span class="dot"></span>Currently building · Backend</span>
             <h3 class="silver">Distributed Order Processing</h3>
-            <p class="desc">A <b>microservices back end</b> where an Order service and an Inventory service each own their data and talk over REST — so an order is only placed when stock can actually be reserved.</p>
+            <p class="desc">A <b>microservices back end</b> where an Order service and an Inventory service each own their PostgreSQL data and talk over REST — so an order is only placed when stock can actually be reserved. Stock reads are cached in <b>Redis</b>, and the whole stack runs from one <b>Docker Compose</b> file.</p>
             <ol class="pin-steps" aria-hidden="true">
               <li data-from="0"><b>A client places an order.</b><span><span>POST /orders reaches the Order service on :8080.</span></span></li>
               <li data-from="3"><b>Order asks Inventory.</b><span><span>A service‑to‑service REST call with Spring RestClient.</span></span></li>
