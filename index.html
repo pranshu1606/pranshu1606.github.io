@@ -374,6 +374,7 @@ section{position:relative}
 .pill{display:inline-block;font-style:normal;font-family:var(--mono);font-size:11px;line-height:18px;padding:0 7px;border-radius:6px;margin-right:6px;letter-spacing:0}
 .pill.ok{color:var(--green);background:rgba(48,209,88,.12)}
 .pill.er{color:#ff6961;background:rgba(255,105,97,.12)}
+.pill.warn{color:var(--orange);background:rgba(255,159,10,.12)}
 .report-notes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin-top:32px}
 .report-notes b{display:block;font-size:15px;color:var(--text);margin-bottom:6px}
 .report-notes p{font-size:15px;line-height:1.5;color:var(--text-2)}
@@ -870,7 +871,7 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
           <div class="pin-copy reveal">
             <span class="tag"><span class="dot"></span>Currently building · Backend</span>
             <h3 class="silver">Distributed Order Processing</h3>
-            <p class="desc">A <b>microservices back end</b> where an Order service and an Inventory service each own their PostgreSQL data and talk over REST — so an order is only placed when stock can actually be reserved. PostgreSQL makes every stock decision, so <b>concurrent orders never oversell</b>. Stock reads are cached in <b>Redis</b>, and the whole stack runs from one <b>Docker Compose</b> file and is tested in <b>GitHub Actions</b> and with <b>k6</b> load runs.</p>
+            <p class="desc">A <b>microservices back end</b> where an Order service and an Inventory service each own their PostgreSQL data and talk over REST — so an order is only placed when stock can actually be reserved. PostgreSQL makes every stock decision, so <b>concurrent orders never oversell</b>. Stock reads are cached in <b>Redis</b>, and the whole stack runs from one <b>Docker Compose</b> file and is tested in <b>GitHub Actions</b> and with <b>k6</b> load and chaos tests.</p>
             <ol class="pin-steps" aria-hidden="true">
               <li data-from="0"><b>A client places an order.</b><span><span>POST /orders reaches the Order service on :8080.</span></span></li>
               <li data-from="3"><b>Order asks Inventory.</b><span><span>A service‑to‑service REST call with Spring RestClient.</span></span></li>
@@ -905,15 +906,16 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
               <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Concurrency‑safe stock: 10 parallel buyers against 5 units always yields exactly 5 orders, verified against real PostgreSQL</div>
               <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Multi‑stage Docker images; one Docker Compose file starts both services, PostgreSQL and Redis, gated by Actuator health checks</div>
               <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>GitHub Actions CI runs the tests, builds both images and smoke‑tests the full stack on every push</div>
-              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>JUnit 5, Mockito and MockMvc tests, a Postman/Newman API suite, and k6 load tests (results below)</div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Failure‑safe orders: stock reservations with idempotent release, background compensation, 503 + Retry‑After, and an Idempotency‑Key header</div>
+              <div class="feat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>JUnit 5, Mockito and MockMvc tests, a Postman/Newman API suite, and k6 capacity, overload and chaos tests (results below)</div>
             </div>
         <div>
             <div class="chips"><span class="chip">Java 17</span><span class="chip">Spring Boot 4</span><span class="chip">Spring Data JPA</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">JUnit 5</span><span class="chip">Mockito</span><span class="chip">GitHub Actions</span><span class="chip">Postman / Newman</span><span class="chip">k6</span></div>
             <div class="commits">
               <span class="lbl">Recent commits</span>
+              <div><code>61cc695</code>Make orders safe under stress: reservations, compensation, idempotency</div>
+              <div><code>568f686</code>Add API demo kit, k6 load tests, and testing report</div>
               <div><code>c26efb6</code>Protect stock reductions and prepare verified demo deployment</div>
-              <div><code>9a61323</code>Add application health checks and healthy Compose startup dependencies</div>
-              <div><code>8676cf3</code>Add CI to test services and build Docker images</div>
             </div>
             <p style="margin-top:22px"><a class="link" href="https://github.com/pranshu1606/distributed-order-processing-system" target="_blank" rel="noopener">View on GitHub <span class="chev">›</span></a></p>
             <div class="when">Started Sep 2026 · in progress</div>
@@ -924,37 +926,41 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
         <div class="report-head reveal">
           <span class="lbl">Testing report</span>
           <h4>Measured, not assumed.</h4>
-          <p>Every number below comes from a run I did myself, on an 8&nbsp;GB laptop with Docker Desktop, on 10–11 Oct 2026. These are short local checks, not production capacity numbers. The runs that failed are listed too.</p>
+          <p>Every number below comes from a run I did myself, on an 8&nbsp;GB laptop with Docker Desktop, on 10–13 Oct 2026. These are short local checks, not production capacity numbers. The runs that failed are listed too, along with what I changed because of them.</p>
         </div>
 
         <div class="dash reveal">
           <div class="mac-bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="mac-title">test-report</span></div>
           <div class="dash-body">
             <div class="kpis" data-stagger>
-              <div class="kpi"><b>18 / 18</b><span>automated tests pass</span></div>
-              <div class="kpi"><b>0</b><span>units oversold under concurrency</span></div>
-              <div class="kpi"><b>20 / 20</b><span>Newman API assertions</span></div>
-              <div class="kpi"><b>533 ms</b><span>order p95 · 10 users · 30 s</span></div>
+              <div class="kpi"><b>35 / 35</b><span>automated tests pass</span></div>
+              <div class="kpi"><b>400 / s</b><span>checkouts sustained on one laptop</span></div>
+              <div class="kpi"><b>9 ms</b><span>order p95 at 400 checkouts/s</span></div>
+              <div class="kpi"><b>0</b><span>units lost in an 8 s database outage</span></div>
             </div>
 
             <div class="runs" role="table" aria-label="Test runs">
               <div class="run hd" role="row"><span role="columnheader">Suite</span><span role="columnheader">Load</span><span role="columnheader">Result</span><span role="columnheader">p95</span></div>
-              <div class="run" role="row"><b role="cell">JUnit · Mockito · MockMvc</b><span role="cell">18 tests, real PostgreSQL 18 + Redis</span><span role="cell"><i class="pill ok">pass</i> Inventory 6 · Order 12</span><span class="p" role="cell">—</span></div>
+              <div class="run" role="row"><b role="cell">JUnit · Mockito · MockMvc</b><span role="cell">35 tests, real PostgreSQL 18 + Redis</span><span role="cell"><i class="pill ok">pass</i> Inventory 16 · Order 19</span><span class="p" role="cell">—</span></div>
               <div class="run" role="row"><b role="cell">Concurrent stock reduction</b><span role="cell">10 parallel buyers · 5 units · ×3</span><span role="cell"><i class="pill ok">pass</i> exactly 5 succeed every run</span><span class="p" role="cell">—</span></div>
+              <div class="run" role="row"><b role="cell">Reserve vs. release race</b><span role="cell">same reservation ID, fired together · ×5</span><span role="cell"><i class="pill ok">pass</i> stock always restored exactly once</span><span class="p" role="cell">—</span></div>
               <div class="run" role="row"><b role="cell">Postman / Newman</b><span role="cell">10 requests</span><span role="cell"><i class="pill ok">pass</i> 20/20, incl. 409 and 400 paths</span><span class="p" role="cell">—</span></div>
-              <div class="run" role="row"><b role="cell">k6 · normal load</b><span role="cell">10 users · 30 s</span><span role="cell"><i class="pill ok">pass</i> 1,214 requests, 607 orders, 0 unexpected errors</span><span class="p" role="cell">533 ms orders<br>139 ms reads</span></div>
               <div class="run" role="row"><b role="cell">k6 · contention</b><span role="cell">30 users racing for 5‑unit items</span><span role="cell"><i class="pill ok">pass</i> 15 orders + 15 expected 409s, stock ends at 0</span><span class="p" role="cell">337 ms</span></div>
-              <div class="run" role="row"><b role="cell">k6 · stress</b><span role="cell">100 users</span><span role="cell"><i class="pill er">fail</i> 7.5% of requests failed (timeouts)</span><span class="p" role="cell">5.0 s</span></div>
-              <div class="run" role="row"><b role="cell">k6 · stress</b><span role="cell">1,000 users</span><span role="cell"><i class="pill er">fail</i> 65% of requests failed</span><span class="p" role="cell">5.0 s</span></div>
+              <div class="run" role="row"><b role="cell">k6 · capacity</b><span role="cell">25 → 400 checkouts/s · 30 s each · 30 products</span><span role="cell"><i class="pill ok">pass</i> 12,001 orders at 400/s, 0 errors</span><span class="p" role="cell">9 ms</span></div>
+              <div class="run" role="row"><b role="cell">k6 · flash sale</b><span role="cell">400 checkouts/s on 3 hot products</span><span role="cell"><i class="pill ok">pass</i> 12,001 orders, 0 errors</span><span class="p" role="cell">13 ms</span></div>
+              <div class="run" role="row"><b role="cell">k6 · overload</b><span role="cell">1,600 checkouts/s (4× capacity)</span><span role="cell"><i class="pill warn">limit</i> ~700 orders/s, 0 errors, 0 lost stock</span><span class="p" role="cell">1.96 s</span></div>
+              <div class="run" role="row"><b role="cell">Chaos · before fix</b><span role="cell">database frozen 8 s · 100 orders/s</span><span role="cell"><i class="pill er">fail</i> 135 units of stock lost, 127 HTTP 500s</span><span class="p" role="cell">5.0 s</span></div>
+              <div class="run" role="row"><b role="cell">Chaos · after fix</b><span role="cell">same freeze · clients retry with one key</span><span role="cell"><i class="pill ok">pass</i> all 2,784 checkouts ordered · 0 lost · 0 duplicates</span><span class="p" role="cell">3.8 s</span></div>
+              <div class="run" role="row"><b role="cell">k6 · first stress test</b><span role="cell">1,000 users in a tight loop</span><span role="cell"><i class="pill er">fail</i> 65% failed, which started the rework</span><span class="p" role="cell">5.0 s</span></div>
               <div class="run" role="row"><b role="cell">GitHub Actions CI</b><span role="cell">every push</span><span role="cell"><i class="pill ok">pass</i> tests, image builds, healthy‑startup check</span><span class="p" role="cell">—</span></div>
             </div>
           </div>
         </div>
 
         <div class="report-notes" data-stagger>
-          <div><b>What held up</b><p>Stock stayed correct under every race I could create. PostgreSQL decides each sale, so the cache can be stale without ever causing an oversell.</p></div>
-          <div><b>What broke</b><p>Past about 100 users on one laptop, order calls hit the 5‑second timeout. Under those timeouts, stock could be reduced even though saving the order failed. That's a real partial‑failure gap.</p></div>
-          <div><b>What's next</b><p>I'm re‑testing a single conditional SQL update for stock and a bounded HTTP connection pool. After that come reservations with compensation, and idempotency keys.</p></div>
+          <div><b>What held up</b><p>Stock stayed exact in every run: 0 lost units and 0 duplicate orders through overload and a database outage. PostgreSQL decides each sale, so a stale cache can never cause an oversell.</p></div>
+          <div><b>What broke, and the fix</b><p>Freezing the database for 8 seconds lost 135 units: Inventory finished reductions after Order had given up. Now each order carries a reservation ID, Order gives stock back exactly once and answers 503 &ldquo;retry&rdquo; quickly, and an Idempotency‑Key stops duplicate orders.</p></div>
+          <div><b>What&rsquo;s next</b><p>Making that give‑back survive a crash (a reconciliation job or outbox), running several service replicas behind a load balancer, and re‑measuring on a dedicated machine.</p></div>
         </div>
       </div>
     </article>
@@ -1701,7 +1707,7 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
     { g: 'Sections', t: 'Overview', h: '#overview', c: '#2997ff', i: '◎' },
     { g: 'Sections', t: 'Experience — mPHATEK Systems', h: '#experience', c: '#5e5ce6', i: '◆' },
     { g: 'Sections', t: 'Project — Distributed Order Processing', h: '#dops', c: '#ff9f0a', i: '⇄' },
-    { g: 'Sections', t: 'Testing report — load & concurrency tests', h: '#dops-tests', c: '#30d158', i: '✓' },
+    { g: 'Sections', t: 'Testing report — load, stress & chaos tests', h: '#dops-tests', c: '#30d158', i: '✓' },
     { g: 'Sections', t: 'Project — KineticAI', h: '#work', c: '#30d158', i: '▲' },
     { g: 'Sections', t: 'Skills', h: '#skills', c: '#ff9f0a', i: '✦' },
     { g: 'Sections', t: 'Tech Specs', h: '#specs', c: '#8e8e93', i: '≡' },
