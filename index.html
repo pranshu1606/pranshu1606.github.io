@@ -15,6 +15,16 @@
   if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
   document.documentElement.dataset.theme = t;
   document.documentElement.classList.add('js');
+  /* Opening animation: once per tab session, never with reduced motion */
+  let seen = false;
+  try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {}
+  let finish;
+  window.introDone = new Promise(r => { finish = r; });
+  window.endIntro = () => { document.documentElement.classList.remove('intro'); finish(); };
+  if (!seen && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('intro');
+    setTimeout(window.endIntro, 7000); // failsafe
+  } else finish();
   document.querySelector('meta[name="theme-color"]').content = t === 'light' ? '#ffffff' : '#000000';
 })();
 </script>
@@ -617,6 +627,28 @@ html:not(.js) .pin-steps li>span,html:not(.js) .step-body{grid-template-rows:1fr
 html:not(.js) .step-body>div{visibility:visible}
 html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
 
+/* ---------- Opening animation ---------- */
+.intro-ov{display:none}
+.intro body{overflow:hidden}
+.intro .hero-inner>*{animation-play-state:paused}
+.intro .intro-ov{display:grid}
+.intro-ov{position:fixed;inset:0;z-index:300;place-items:center;background:radial-gradient(120% 80% at 50% 45%,#141416 0%,#050505 60%,#000 100%);color:#fff;transition:opacity .8s var(--ease),visibility 0s .8s;cursor:pointer}
+.intro-ov.ov-out{opacity:0;visibility:hidden;pointer-events:none}
+.intro-ov canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity 1s var(--ease)}
+.intro-ov.ov-stars canvas{opacity:1}
+.intro-dot{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,255,255,.7);transform:scale(0);opacity:0}
+.intro-ov.ov-dot .intro-dot{animation:introDot .9s var(--ease) forwards}
+@keyframes introDot{0%{transform:scale(0);opacity:0}25%{transform:scale(1);opacity:1}65%{transform:scale(1);opacity:1}100%{transform:scale(3);opacity:0;filter:blur(4px)}}
+.intro-word{position:relative;display:flex;font-family:"Inter",var(--font);font-weight:800;font-size:clamp(52px,13vw,176px);line-height:1;letter-spacing:-.035em;white-space:nowrap;opacity:0;filter:blur(12px);transform:scale(.96);transition:opacity .6s var(--ease),filter .6s var(--ease),transform 1s var(--ease)}
+.intro-ov.ov-word .intro-word{opacity:1;filter:none;transform:none}
+.intro-ov.ov-leave .intro-word{opacity:0;filter:blur(10px);transform:translateY(-60px) scale(.88);transition:opacity .7s var(--ease),filter .7s var(--ease),transform .9s var(--ease)}
+.intro-word span{display:inline-block;background:linear-gradient(180deg,#fff 25%,#c7c7cc 60%,#6e6e73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 14px rgba(255,255,255,.12))}
+.intro-word span.swap{animation:introSwap .32s var(--ease)}
+@keyframes introSwap{0%{opacity:0;transform:translateY(.18em);filter:blur(6px)}100%{opacity:1;transform:none;filter:none}}
+.intro-skip{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.02em;opacity:0;transition:opacity .6s}
+.intro-ov.ov-word .intro-skip{opacity:1}
+.intro-ov.ov-leave .intro-skip{opacity:0}
+
 /* ---------- Light appearance ---------- */
 :root{color-scheme:dark}
 :root[data-theme=light]{
@@ -690,6 +722,71 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
 </style>
 </head>
 <body>
+<div class="intro-ov" id="intro" aria-hidden="true">
+  <canvas id="introStars"></canvas>
+  <span class="intro-dot"></span>
+  <div class="intro-word" id="introWord"></div>
+  <span class="intro-skip">Skip intro</span>
+</div>
+<script>
+(() => {
+  if (!document.documentElement.classList.contains('intro')) return;
+  const ov = document.getElementById('intro'), word = document.getElementById('introWord');
+  const FROM = 'PRANSHU', TO = 'PORTFOLIO';
+  const timers = [];
+  const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+  let done = false, raf;
+
+  const letters = [...FROM].map(ch => { const s = document.createElement('span'); s.textContent = ch; word.append(s); return s; });
+
+  /* Starfield: fine twinkling particles drifting outward from the centre */
+  const cv = document.getElementById('introStars'), ctx = cv.getContext('2d');
+  let w, h, stars = [];
+  const size = () => {
+    const d = Math.min(devicePixelRatio || 1, 2);
+    w = cv.width = innerWidth * d; h = cv.height = innerHeight * d;
+    stars = Array.from({ length: Math.round(innerWidth * innerHeight / 900) }, () => ({
+      x: Math.random() * w, y: Math.random() * h, r: (Math.random() * 1.1 + .3) * d,
+      a: Math.random(), s: Math.random() * .02 + .005, v: Math.random() * .25 + .05
+    }));
+  };
+  const draw = () => {
+    ctx.clearRect(0, 0, w, h);
+    for (const p of stars) {
+      p.a += p.s; const dx = p.x - w / 2, dy = p.y - h / 2, l = Math.hypot(dx, dy) || 1;
+      p.x += dx / l * p.v; p.y += dy / l * p.v;
+      ctx.globalAlpha = .35 + Math.abs(Math.sin(p.a)) * .65;
+      ctx.fillStyle = '#fff'; ctx.fillRect(p.x, p.y, p.r, p.r);
+    }
+    raf = requestAnimationFrame(draw);
+  };
+
+  const finish = () => {
+    if (done) return; done = true;
+    timers.forEach(clearTimeout);
+    ov.classList.add('ov-leave', 'ov-out');
+    try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+    window.endIntro();
+    setTimeout(() => { cancelAnimationFrame(raf); ov.remove(); }, 900);
+  };
+
+  at(250, () => ov.classList.add('ov-dot'));
+  at(800, () => ov.classList.add('ov-word'));
+  /* Morph the name into PORTFOLIO, one letter at a time, left to right */
+  [...TO].forEach((ch, i) => at(1350 + i * 140, () => {
+    let s = letters[i];
+    if (!s) { s = document.createElement('span'); word.append(s); letters[i] = s; }
+    if (s.textContent === ch) return;
+    s.textContent = ch;
+    s.classList.remove('swap'); void s.offsetWidth; s.classList.add('swap');
+  }));
+  at(2900, () => { size(); draw(); ov.classList.add('ov-stars', 'ov-leave'); });
+  at(3800, finish);
+
+  ov.addEventListener('click', finish);
+  addEventListener('keydown', finish, { once: true });
+})();
+</script>
 <a class="skip" href="#top">Skip to content</a>
 
 <!-- ============ NAV ============ -->
@@ -1503,9 +1600,11 @@ html:not(.js) .copy-row,html:not(.js) .step-btn svg{display:none}
   };
   new IntersectionObserver((e, o) => {
     if (e[0].isIntersecting) {
-      runTerm();
-      $('#ringFg').style.strokeDashoffset = String(188.5 * (1 - .857));
       o.disconnect();
+      window.introDone.then(() => {
+        runTerm();
+        $('#ringFg').style.strokeDashoffset = String(188.5 * (1 - .857));
+      });
     }
   }, { threshold: .3 }).observe(mac);
 
