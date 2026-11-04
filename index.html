@@ -22,7 +22,7 @@
   if (!seen && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     root.classList.add('intro', 'building');
     setTimeout(window.endIntro, 7000); // failsafe
-    setTimeout(() => root.classList.remove('building'), 30000); // failsafe
+    setTimeout(() => root.classList.remove('building'), 60000); // failsafe
     setTimeout(() => { if (!root.classList.contains('bld-on')) root.classList.remove('building'); }, 3000);
   } else finish();
 })();
@@ -332,15 +332,15 @@ footer button:hover{color:var(--text)}
 .building main{opacity:0}
 .building.bld-on main{opacity:1}
 .building .layer:not(.on){opacity:0;clip-path:inset(0 100% 0 0)}
-.building .layer{transition:opacity .35s var(--ease-out),clip-path .5s var(--ease-out)}
+.building .layer{transition:opacity .6s var(--ease-out),clip-path .9s var(--ease-out)}
 .building .layer.on{clip-path:inset(0 0 0 0)}
 .building .rail,.building .hire{opacity:0;transition:opacity .6s}
 .building.bld-done .rail,.building.bld-done .hire{opacity:1}
 .bld-layer{position:absolute;left:0;top:0;width:100%;height:0;z-index:var(--z-build);pointer-events:none}
-.agent{position:absolute;left:0;top:0;transition:transform .32s var(--ease-out),opacity .3s;will-change:transform}
+.agent{position:absolute;left:0;top:0;transition:transform .7s var(--ease-out),opacity .3s;will-change:transform}
 .agent svg{width:18px;height:18px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
 .agent b{position:absolute;left:14px;top:16px;padding:1px 7px;border-radius:6px;font-family:var(--mono);font-size:12px;font-weight:500;color:#0a0910;background:var(--c);white-space:nowrap}
-.selbox{position:absolute;border:1.5px solid var(--sel);background:rgba(59,130,246,.06);transition:opacity .25s}
+.selbox{position:absolute;border:2px solid var(--sel);background:rgba(59,130,246,.08);transition:opacity .4s}
 .selbox i{position:absolute;width:7px;height:7px;background:#fff;border:1.5px solid var(--sel)}
 .selbox i:nth-child(1){left:-4px;top:-4px}.selbox i:nth-child(2){right:-4px;top:-4px}.selbox i:nth-child(3){left:-4px;bottom:-4px}.selbox i:nth-child(4){right:-4px;bottom:-4px}
 .selbox em{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);padding:1px 6px;border-radius:4px;background:var(--sel);color:#fff;font-family:var(--mono);font-size:12px;font-style:normal;white-space:nowrap}
@@ -978,7 +978,8 @@ footer button:hover{color:var(--text)}
     document.body.append(bar);
     const dots = $('.bld-dots', bar), nEl = $('.bld-n', bar), dEl = $('.bld-d', bar), prog = $('.bld-prog i', bar), mode = $('.bld-mode', bar);
 
-    let next = 0, done = 0, touring = true, finished = false, raf;
+    let next = 0, done = 0, front = 0, touring = true, finished = false, raf;
+    const TRAVEL = 650, HOLD = 500;
     const agents = [];
     const total = layers.length;
     const pos = el => { const r = el.getBoundingClientRect(); return { x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height }; };
@@ -1009,20 +1010,21 @@ footer button:hover{color:var(--text)}
         box.innerHTML = `<i></i><i></i><i></i><i></i>${p.w > 60 ? `<em>${Math.round(p.w)} × ${Math.round(p.h)}</em>` : ''}`;
         stage.append(box);
         gh.style.opacity = 1; gh.style.top = p.y + 'px';
+        front = Math.max(front, p.y);
         el.classList.add('on');
         done++; dEl.textContent = done; prog.style.width = (done / total * 100) + '%';
-        setTimeout(() => { box.style.opacity = 0; setTimeout(() => box.remove(), 260); }, 220);
+        setTimeout(() => { box.style.opacity = 0; setTimeout(() => box.remove(), 420); }, HOLD);
         if (done >= total) end(true);
-        else setTimeout(() => work(a), 60 + Math.random() * 90);
-      }, 300);
+        else setTimeout(() => work(a), HOLD + 100 + Math.random() * 200);
+      }, TRAVEL);
     };
 
     /* Follow the build front down the page */
     const tour = () => {
       if (finished) return;
       if (touring && next < total) {
-        const target = Math.max(0, pos(layers[Math.max(0, next - 1)]).y - innerHeight * .45);
-        const cur = scrollY, nextY = cur + (target - cur) * .07;
+        const target = Math.max(0, front - innerHeight * .4);
+        const cur = scrollY, nextY = cur + (target - cur) * .035;
         if (Math.abs(target - cur) > 1) scrollTo({ top: nextY, behavior: 'instant' });
         mode.textContent = target > 40 ? 'Touring' : 'Building';
       }
@@ -1059,7 +1061,7 @@ footer button:hover{color:var(--text)}
 
     /* Agents join over time, like a team spinning up */
     let spawned = 0;
-    const spawn = () => { if (finished || spawned >= 12) return; addAgent(); spawned++; setTimeout(spawn, spawned < 3 ? 120 : 420); };
+    const spawn = () => { if (finished || spawned >= 12) return; addAgent(); spawned++; setTimeout(spawn, spawned < 3 ? 350 : 700); };
     scrollTo({ top: 0, behavior: 'instant' });
     spawn();
     raf = requestAnimationFrame(tour);
